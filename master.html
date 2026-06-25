@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LARA V6 - OPEN INTEREST ENHANCED</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --sidebar-bg: #111;
+            --accent: #1E90FF;
+            --text: #e0e0e0;
+            --gold: #FFD700;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(17, 17, 17, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #222;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 20px;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        /* Hamburger */
+        .ham {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 1001;
+        }
+
+        .ham div {
+            width: 25px;
+            height: 3px;
+            background: #fff;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        .ham.open .bar1 {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .ham.open .bar2 {
+            opacity: 0;
+        }
+
+        .ham.open .bar3 {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Sidebar */
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: var(--sidebar-bg);
+            z-index: 999;
+            transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            padding-top: 80px;
+            box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
+        }
+
+        #sidebar.open {
+            left: 0;
+        }
+
+        .nav-item {
+            padding: 15px 30px;
+            font-weight: 600;
+            color: #888;
+            cursor: pointer;
+            transition: 0.2s;
+            border-left: 4px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background: rgba(30, 144, 255, 0.1);
+            color: #fff;
+            border-left-color: var(--accent);
+        }
+
+        .nav-item.portfolio {
+            margin-top: 20px;
+            border-top: 1px solid #222;
+            padding-top: 25px;
+        }
+
+        /* Main View */
+        #content {
+            width: 100%;
+            height: 100vh;
+            padding-top: 0;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #fff;
+        }
+
+        /* Portfolio Modal/Overlay */
+        #portfolio-view {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg);
+            z-index: 900;
+            display: none;
+            overflow-y: auto;
+            padding: 40px;
+        }
+
+        #portfolio-view.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #151515;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .card h3 {
+            margin: 0 0 15px 0;
+            color: var(--accent);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .card .total {
+            font-size: 24px;
+            font-weight: 800;
+            color: #00ff00;
+        }
+
+        .card .total.neg {
+            color: #ff4444;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+        }
+
+        th {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 2px solid #222;
+            color: #555;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #222;
+        }
+
+        .pos {
+            color: #00ff00;
+        }
+
+        .neg {
+            color: #ff4444;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: none;
+        }
+
+        .overlay.open {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="ham" id="ham" onclick="toggleMenu()">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+            <div class="bar3"></div>
+        </div>
+        <div class="logo">LARA<span>STRATEGY</span></div>
+        <div style="font-size: 12px; color: #555; font-weight: 700;">PRO TERMINAL V5</div>
+    </header>
+
+    <div id="sidebar">
+        <div class="nav-item active" onclick="loadContent('Gold/Gold_V6_OI_Dashboard.html', this)">🥇 Gold</div>
+        <div class="nav-item" onclick="loadContent('Silver/Silver_V6_OI_Dashboard.html', this)">🥈 Silver
+        </div>
+        <div class="nav-item" onclick="loadContent('Copper/Copper_V6_OI_Dashboard.html', this)">🥉 Copper
+        </div>
+        <div class="nav-item" onclick="loadContent('Wheat/Wheat_V6_OI_Dashboard.html', this)">🌾 Wheat
+        </div>
+        <div class="nav-item" onclick="loadContent('Euro/Euro_V6_OI_Dashboard.html', this)">🇪🇺 Euro FX
+        </div>
+        <div class="nav-item" onclick="loadContent('Bitcoin/Bitcoin_V6_OI_Dashboard.html', this)">₿
+            Bitcoin</div>
+        <div class="nav-item" onclick="loadContent('Palladium/Palladium_V6_OI_Dashboard.html', this)">⚪
+            Palladium
+        </div>
+        <div class="nav-item" onclick="loadContent('Platinum/Platinum_V6_OI_Dashboard.html', this)">💿
+            Platinum
+        </div>
+        <div class="nav-item" onclick="loadContent('Soybeans/Soybeans_V6_OI_Dashboard.html', this)">🫘
+            Soybeans
+        </div>
+        <div class="nav-item" onclick="loadContent('Corn/Corn_V6_OI_Dashboard.html', this)">🌽
+            Corn
+        </div>
+        <div class="nav-item" onclick="loadContent('CrudeOil/CrudeOil_V6_OI_Dashboard.html', this)">🛢️
+            Crude Oil (WTI)
+        </div>
+        <div class="nav-item portfolio" onclick="showPortfolio(this)">📊 LARA PORTFOLIO</div>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <div id="content">
+        <iframe id="frame" src="Gold/Gold_V6_OI_Dashboard.html"></iframe>
+    </div>
+
+    <div id="portfolio-view">
+        <h1 style="margin-top: 0; font-weight: 800;">Strategy Performance <span style="color:var(--accent)">2017 -
+                2026</span></h1>
+        <p style="color:#666">V6 Model &mdash; <strong style="color:#26a69a">Inst. Aggression (55%)</strong> + <strong
+                style="color:#1E90FF">OI Momentum (45%)</strong> &nbsp;|&nbsp; <strong>Buy &gt; 0.10</strong> /
+            <strong>Sell &lt; -0.15</strong> &nbsp;|&nbsp; No channel position.</p>
+
+        <div class="stats-grid" id="stats-grid">
+            <!-- Cards will be injected here -->
+        </div>
+    </div>
+
+    <script>
+        const perfData = [
+            {"asset": "Bitcoin", "strategy": "LARA_V6_OI", "total_return": 859.38, "annual": {"2020": 238.33, "2021": 73.75, "2022": -68.01, "2023": 154.21, "2024": 117.23, "2025": -5.05, "2026": -21.1}, "total_trades": 16, "last_signal": "FLAT", "score_weights": {"aggression": 0.55, "oi_momentum": 0.45, "channel_pos": 0.0}, "thresholds": {"buy": 0.1, "sell": -0.15}},
+            {"asset": "Copper", "strategy": "LARA_V6_OI", "total_return": -8.38, "annual": {"2017": 16.32, "2018": -17.11, "2019": 5.78, "2020": 27.53, "2021": 20.84, "2022": -15.95, "2023": 0.93, "2024": 3.29, "2025": 34.31, "2026": 6.03}, "total_trades": 15, "last_signal": "FLAT", "score_weights": {"aggression": 0.55, "oi_momentum": 0.45, "channel_pos": 0.0}, "thresholds": {"buy": 0.1, "sell": -0.15}},
+            {"asset": "Corn", "strategy": "LARA_V6_OI", "total_return": -8.55, "annual": {"2017": -3.41, "2018": 7.46, "2019": 3.53, "2020": 13.33, "2021": 29.68, "2022": 5.45, "2023": -28.66, "2024": -5.44, "2025": -1.27, "2026": -1.64}, "total_trades": 18, "last_signal": "FLAT", "score_weights": {"aggression": 0.55, "oi_momentum": 0.45, "channel_pos": 0.0}, "thresholds": {"buy": 0.1, "sell": -0.15}},
+            {"asset": "CrudeOil", "strategy": "LARA_V6_OI", "total_return": -0.42, "annual": {"2017": 9.04, "2018": -26.63, "2019": 32.38, "2020": -22.29, "2021": 45.03, "2022": -0.36, "2023": -9.29, "2024": -5.44, "2025": -18.55, "2026": 48.33}, "total_trades": 19, "last_signal": "BUY", "score_weights": {"aggression": 0.55, "oi_momentum": 0.45, "channel_pos": 0.0}, "thresholds": {"buy": 0.1, "sell": -0.15}},
+            {"asset": "Euro", "strategy": "LARA_V6_OI", "total_return": -4.3, "annual": {"2017": 11.03, "2018": -3.97, "2019": -3.24, "2020": 9.3, "2021": -7.79, "2022": -6.17, "2023": 2.63, "2024": -5.54, "2025": 13.15, "2026": -1.22}, "total_trades": 13, "last_signal": "BUY", "score_weights": {"aggression": 0.55, "oi_momentum": 0.45, "channel_pos": 0.0}, "thresholds": {"buy": 0.1, "sell": -0.15}},
+            {"asset": "Gold", "strategy": "LARA_V6_OI", "total_return": 148.82, "annual": {"2017": 4.61, "2018": -1.02, "2019": 15.76, "2020": 24.34, "2021": -4.78, "2022": -1.41, "2023": 12.3, "2024": 26.84, "2025": 72.65, "2026": 18.22}, "total_trades": 14, "last_signal": "BUY", "score_weights": {"aggression": 0.55, "oi_momentum": 0.45, "channel_pos": 0.0}, "thresholds": {"buy": 0.1, "sell": -0.15}},
+            {"asset": "Palladium", "strategy": "LARA_V6_OI", "total_return": 122.82, "annual": {"2017": 38.07, "2018": 16.86, "2019": 47.49, "2020": 21.06, "2021": -23.19, "2022": -14.38, "2023": -31.85, "2024": -21.05, "2025": 105.45, "2026": 1.1}, "total_trades": 14, "last_signal": "FLAT", "score_weights": {"aggression": 0.55, "oi_momentum": 0.45, "channel_pos": 0.0}, "thresholds": {"buy": 0.1, "sell": -0.15}},
+            {"asset": "Platinum", "strategy": "LARA_V6_OI", "total_return": 247.19, "annual": {"2017": -7.6, "2018": -13.34, "2019": 18.87, "2020": 5.07, "2021": -12.14, "2022": 4.79, "2023": -7.64, "2024": -2.2, "2025": 154.09, "2026": 8.23}, "total_trades": 19, "last_signal": "FLAT", "score_weights": {"aggression": 0.55, "oi_momentum": 0.45, "channel_pos": 0.0}, "thresholds": {"buy": 0.1, "sell": -0.15}},
+            {"asset": "Silver", "strategy": "LARA_V6_OI", "total_return": 209.52, "annual": {"2017": -5.51, "2018": -9.1, "2019": 12.89, "2020": 46.55, "2021": -15.33, "2022": 0.13, "2023": -0.62, "2024": 23.43, "2025": 137.1, "2026": 22.14}, "total_trades": 20, "last_signal": "BUY", "score_weights": {"aggression": 0.55, "oi_momentum": 0.45, "channel_pos": 0.0}, "thresholds": {"buy": 0.1, "sell": -0.15}},
+            {"asset": "Soybeans", "strategy": "LARA_V6_OI", "total_return": 5.22, "annual": {"2017": -8.7, "2018": -7.06, "2019": 5.84, "2020": 32.5, "2021": 3.05, "2022": 7.44, "2023": -10.97, "2024": -25.5, "2025": 7.45, "2026": 12.43}, "total_trades": 17, "last_signal": "FLAT", "score_weights": {"aggression": 0.55, "oi_momentum": 0.45, "channel_pos": 0.0}, "thresholds": {"buy": 0.1, "sell": -0.15}},
+            {"asset": "Wheat", "strategy": "LARA_V6_OI", "total_return": 167.12, "annual": {"2017": -1.41, "2018": 21.7, "2019": 7.36, "2020": 10.9, "2021": 26.74, "2022": -7.26, "2023": -20.86, "2024": -12.28, "2025": -6.29, "2026": 14.63}, "total_trades": 22, "last_signal": "FLAT", "score_weights": {"aggression": 0.55, "oi_momentum": 0.45, "channel_pos": 0.0}, "thresholds": {"buy": 0.1, "sell": -0.15}},
+        ];
+
+        function initPortfolio() {
+            const grid = document.getElementById('stats-grid');
+            perfData.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                let rows = '';
+                Object.keys(p.annual).sort().reverse().forEach(yr => {
+                    const val = p.annual[yr];
+                    rows += `<tr><td>${yr}</td><td class="${val >= 0 ? 'pos' : 'neg'}">${val >= 0 ? '+' : ''}${val}%</td></tr>`;
+                });
+                card.innerHTML = `
+                <h3>${p.asset} <span class="total ${p.total_return < 0 ? 'neg' : ''}">${p.total_return >= 0 ? '+' : ''}${p.total_return}%</span></h3>
+                <div style="display:flex;gap:12px;margin-bottom:8px;font-size:11px;">
+                  <span style="color:#555;">Trades: <b style="color:#ddd">${p.total_trades || '-'}</b></span>
+                  <span style="color:#555;">Last: <b style="color:${p.last_signal === 'BUY' ? '#00ff00' : '#aaa'}">${p.last_signal || '-'}</b></span>
+                  <span style="color:#555;">Model: <b style="color:#888">AGG 55% + OI 45%</b></span>
+                </div>
+                <table><thead><tr><th>Year</th><th>Asset Return</th></tr></thead><tbody>${rows}</tbody></table>
+            `;
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('ham').classList.toggle('open');
+            document.getElementById('overlay').classList.toggle('open');
+        }
+
+        function loadContent(path, el) {
+            document.getElementById('portfolio-view').classList.remove('active');
+            document.getElementById('frame').src = path;
+            updateActive(el);
+            toggleMenu(); // Auto close
+        }
+
+        function showPortfolio(el) {
+            document.getElementById('portfolio-view').classList.add('active');
+            updateActive(el);
+            toggleMenu(); // Auto close
+        }
+
+        function updateActive(el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        window.onload = initPortfolio;
+    </script>
+
+</body>
+
+</html>
