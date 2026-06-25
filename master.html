@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LARA STRATEGY — Master Terminal</title>
+<title>CFTC COT — Terminal</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#070a12; --tx:#e8edf6; --mut:#8b96a8;
-    --oi:#3b82f6; --oc:#a855f7; --grn:#22c55e; --red:#f43f5e;
+    --oi:#3b82f6; --oc:#a855f7; --grn:#22c55e;
     --glass:rgba(255,255,255,.05); --glass-bd:rgba(255,255,255,.09);
     --sb:264px; --hd:64px;
   }
@@ -36,6 +36,8 @@
   .toggle button.on.oi{color:#fff;background:linear-gradient(100deg,#3b82f6,#60a5fa);box-shadow:0 4px 14px -4px rgba(59,130,246,.7);}
   .toggle button.on.oc{color:#fff;background:linear-gradient(100deg,#8b5cf6,#a855f7);box-shadow:0 4px 14px -4px rgba(168,85,247,.7);}
   .spacer{margin-left:auto;}
+  .home{color:var(--mut);text-decoration:none;font-size:12px;font-weight:600;padding:7px 12px;border-radius:9px;border:1px solid var(--glass-bd);transition:.18s;}
+  .home:hover{color:#fff;background:rgba(255,255,255,.05);}
   .status{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mut);font-weight:700;letter-spacing:.5px;}
   .live{width:7px;height:7px;border-radius:50%;background:var(--grn);box-shadow:0 0 0 4px rgba(34,197,94,.18);}
   .date{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--mut);}
@@ -50,41 +52,14 @@
   .nav-item .ico{font-size:17px;width:22px;text-align:center;}
   .nav-item:hover{background:rgba(255,255,255,.04);color:var(--tx);}
   .nav-item.active{background:rgba(59,130,246,.12);color:#fff;border-color:rgba(59,130,246,.28);}
-  .nav-item.pf.active{background:linear-gradient(100deg,rgba(59,130,246,.16),rgba(168,85,247,.16));border-color:rgba(168,85,247,.32);}
-  .sb-div{height:1px;background:var(--glass-bd);margin:12px 8px;}
+  .sb-note{margin:14px 8px 4px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.03);
+    border:1px solid var(--glass-bd);color:var(--mut);font-size:11.5px;line-height:1.6;}
 
   /* content */
   #content{position:fixed;top:var(--hd);left:var(--sb);right:0;bottom:0;padding:16px;}
   .frame-wrap{width:100%;height:100%;border-radius:18px;overflow:hidden;border:1px solid var(--glass-bd);
     box-shadow:0 20px 60px -24px rgba(0,0,0,.85);background:#fff;}
   iframe{width:100%;height:100%;border:none;display:block;background:#fff;}
-
-  /* portfolio */
-  #portfolio-view{position:fixed;top:var(--hd);left:var(--sb);right:0;bottom:0;z-index:850;display:none;
-    background:var(--bg);background-image:radial-gradient(60% 50% at 50% 0%,rgba(99,102,241,.1),transparent 60%);
-    overflow-y:auto;padding:34px 32px 48px;}
-  #portfolio-view.active{display:block;}
-  .pf-h1{font-size:30px;font-weight:900;letter-spacing:-.8px;}
-  .pf-h1 .grad{background:linear-gradient(100deg,#60a5fa,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent;}
-  .pf-sub{color:var(--mut);font-size:14px;margin-top:8px;}
-  .pf-sub b.agg{color:#26a69a;} .pf-sub b.oi{color:#60a5fa;}
-  .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-top:26px;}
-  .card{background:var(--glass);border:1px solid var(--glass-bd);backdrop-filter:blur(16px);border-radius:18px;padding:22px;transition:.25s;}
-  .card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.16);box-shadow:0 22px 48px -22px rgba(0,0,0,.7);}
-  .card h3{display:flex;align-items:center;justify-content:space-between;font-size:16px;font-weight:800;margin-bottom:14px;}
-  .card h3 .ico{margin-right:8px;}
-  .total{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--grn);}
-  .total.neg{color:var(--red);}
-  .meta{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;margin-bottom:12px;color:var(--mut);}
-  .sig{font-weight:700;padding:2px 8px;border-radius:6px;font-size:10px;letter-spacing:.4px;}
-  .sig.buy{background:rgba(34,197,94,.16);color:#5fe39a;}
-  .sig.flat{background:rgba(148,163,184,.14);color:#aab4c4;}
-  .sig.sell{background:rgba(244,63,94,.16);color:#ff8aa0;}
-  table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:12.5px;}
-  th{text-align:left;padding:7px 8px;border-bottom:1px solid var(--glass-bd);color:var(--mut);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.5px;}
-  td{padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.04);}
-  tr:last-child td{border-bottom:none;}
-  .pos{color:var(--grn);} .neg{color:var(--red);}
 
   .overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(2px);z-index:880;display:none;}
   .overlay.open{display:block;}
@@ -93,21 +68,23 @@
     .ham{display:flex;}
     #sidebar{transform:translateX(-100%);box-shadow:24px 0 60px rgba(0,0,0,.6);}
     #sidebar.open{transform:translateX(0);}
-    #content,#portfolio-view{left:0;}
+    #content{left:0;}
     .now-asset .lbl-txt{display:none;}
+    .home{display:none;}
   }
 </style>
 </head>
 <body>
 <header>
   <div class="ham" id="ham" onclick="toggleMenu()"><div></div><div></div><div></div></div>
-  <div class="logo">LARA<span>STRATEGY</span></div>
+  <div class="logo">CFTC<span> COT</span></div>
   <div class="now-asset"><span class="ico" id="cur-ico">🥇</span><span class="lbl-txt" id="cur-name">Gold</span></div>
   <div class="toggle">
     <button class="on oi" id="t-oi" onclick="setMode('OI')">OI</button>
     <button id="t-oc" onclick="setMode('OC')">OC</button>
   </div>
   <div class="spacer"></div>
+  <a class="home" href="index.html">← Ana ekran</a>
   <div class="status"><span class="live"></span> LIVE</div>
   <div class="date" id="date">—</div>
 </header>
@@ -115,8 +92,7 @@
 <div id="sidebar">
   <div class="sb-label">Varlıklar</div>
   <div id="nav"></div>
-  <div class="sb-div"></div>
-  <div class="nav-item pf" id="pf-nav" onclick="showPortfolio()"><span class="ico">📊</span> LARA Portföy</div>
+  <div class="sb-note"><b style="color:#cfe0ff">OI</b> = Futures Only · <b style="color:#ecd6ff">OC</b> = Options + Futures. Üstteki anahtarla geçiş yap.</div>
 </div>
 
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
@@ -125,25 +101,19 @@
   <div class="frame-wrap"><iframe id="frame" src="OI/Gold.html"></iframe></div>
 </div>
 
-<div id="portfolio-view">
-  <div class="pf-h1">Strateji Performansı <span class="grad">2017 – 2026</span></div>
-  <p class="pf-sub">V6 Model — <b class="agg">Inst. Aggression (55%)</b> + <b class="oi">OI Momentum (45%)</b> &nbsp;|&nbsp; Buy &gt; 0.10 / Sell &lt; −0.15 &nbsp;|&nbsp; total return, long-only</p>
-  <div class="stats-grid" id="stats-grid"></div>
-</div>
-
 <script>
   const assets=[
     {name:"Gold",file:"Gold.html",ico:"🥇"},
     {name:"Silver",file:"Silver.html",ico:"🥈"},
-    {name:"Copper",file:"Copper.html",ico:"🥉"},
-    {name:"Wheat",file:"Wheat.html",ico:"🌾"},
-    {name:"Euro FX",file:"Euro.html",ico:"🇪🇺"},
-    {name:"Bitcoin",file:"Bitcoin.html",ico:"₿"},
-    {name:"Palladium",file:"Palladium.html",ico:"⚪"},
     {name:"Platinum",file:"Platinum.html",ico:"💿"},
-    {name:"Soybeans",file:"Soybeans.html",ico:"🫘"},
-    {name:"Corn",file:"Corn.html",ico:"🌽"},
+    {name:"Palladium",file:"Palladium.html",ico:"⚪"},
+    {name:"Copper",file:"Copper.html",ico:"🥉"},
+    {name:"Bitcoin",file:"Bitcoin.html",ico:"₿"},
     {name:"Crude Oil (WTI)",file:"CrudeOil.html",ico:"🛢️"},
+    {name:"Euro FX",file:"Euro.html",ico:"🇪🇺"},
+    {name:"Wheat",file:"Wheat.html",ico:"🌾"},
+    {name:"Corn",file:"Corn.html",ico:"🌽"},
+    {name:"Soybeans",file:"Soybeans.html",ico:"🫘"},
   ];
   let mode="OI", curFile="Gold.html";
 
@@ -153,7 +123,6 @@
 
   function loadAsset(i,el){
     const a=assets[i]; curFile=a.file;
-    document.getElementById("portfolio-view").classList.remove("active");
     document.getElementById("frame").src = mode+"/"+a.file;
     document.getElementById("cur-name").textContent=a.name;
     document.getElementById("cur-ico").textContent=a.ico;
@@ -164,16 +133,7 @@
     mode=m;
     document.getElementById("t-oi").className = (m==="OI"?"on oi":"");
     document.getElementById("t-oc").className = (m==="OC"?"on oc":"");
-    if(!document.getElementById("portfolio-view").classList.contains("active")){
-      document.getElementById("frame").src = mode+"/"+curFile;
-    }
-  }
-  function showPortfolio(){
-    document.getElementById("portfolio-view").classList.add("active");
-    setActive(document.getElementById("pf-nav"));
-    document.getElementById("cur-name").textContent="Portföy";
-    document.getElementById("cur-ico").textContent="📊";
-    if(window.innerWidth<=880) closeMenu();
+    document.getElementById("frame").src = mode+"/"+curFile;
   }
   function setActive(el){
     document.querySelectorAll(".nav-item").forEach(i=>i.classList.remove("active"));
@@ -187,47 +147,7 @@
     document.getElementById("sidebar").classList.remove("open");
     document.getElementById("overlay").classList.remove("open");
   }
-
-  const icoMap={Bitcoin:"₿",Copper:"🥉",Corn:"🌽",CrudeOil:"🛢️",Euro:"🇪🇺",Gold:"🥇",Palladium:"⚪",Platinum:"💿",Silver:"🥈",Soybeans:"🫘",Wheat:"🌾"};
-  const perfData = [
-    {"asset":"Bitcoin","total_return":859.38,"annual":{"2020":238.33,"2021":73.75,"2022":-68.01,"2023":154.21,"2024":117.23,"2025":-5.05,"2026":-24.24},"total_trades":16,"last_signal":"FLAT"},
-    {"asset":"Platinum","total_return":224.73,"annual":{"2017":-7.6,"2018":-13.34,"2019":18.87,"2020":5.07,"2021":-12.14,"2022":4.79,"2023":-7.64,"2024":-2.2,"2025":154.09,"2026":-12.25},"total_trades":20,"last_signal":"BUY"},
-    {"asset":"Silver","total_return":148.33,"annual":{"2017":-5.51,"2018":-9.1,"2019":12.89,"2020":46.55,"2021":-15.33,"2022":0.13,"2023":-0.62,"2024":23.43,"2025":137.1,"2026":-2.01},"total_trades":20,"last_signal":"BUY"},
-    {"asset":"Wheat","total_return":167.12,"annual":{"2017":-1.41,"2018":21.7,"2019":7.36,"2020":10.9,"2021":26.74,"2022":-7.26,"2023":-20.86,"2024":-12.28,"2025":-6.29,"2026":14.87},"total_trades":22,"last_signal":"FLAT"},
-    {"asset":"Gold","total_return":117.34,"annual":{"2017":4.61,"2018":-1.02,"2019":15.76,"2020":24.34,"2021":-4.78,"2022":-1.41,"2023":12.3,"2024":26.84,"2025":72.65,"2026":-0.85},"total_trades":14,"last_signal":"FLAT"},
-    {"asset":"Palladium","total_return":100.74,"annual":{"2017":38.07,"2018":16.86,"2019":47.49,"2020":21.06,"2021":-23.19,"2022":-14.38,"2023":-31.85,"2024":-21.05,"2025":105.45,"2026":-17.85},"total_trades":15,"last_signal":"BUY"},
-    {"asset":"Soybeans","total_return":-0.35,"annual":{"2017":-8.7,"2018":-7.06,"2019":5.84,"2020":32.5,"2021":3.05,"2022":7.44,"2023":-10.97,"2024":-25.5,"2025":7.45,"2026":6.62},"total_trades":18,"last_signal":"BUY"},
-    {"asset":"CrudeOil","total_return":7.37,"annual":{"2017":9.04,"2018":-26.63,"2019":32.38,"2020":-22.29,"2021":45.03,"2022":-0.36,"2023":-9.29,"2024":-5.44,"2025":-18.55,"2026":40.29},"total_trades":19,"last_signal":"FLAT"},
-    {"asset":"Copper","total_return":-8.38,"annual":{"2017":16.32,"2018":-17.11,"2019":5.78,"2020":27.53,"2021":20.84,"2022":-15.95,"2023":0.93,"2024":3.29,"2025":34.31,"2026":17.89},"total_trades":15,"last_signal":"FLAT"},
-    {"asset":"Corn","total_return":-9.43,"annual":{"2017":-3.41,"2018":7.46,"2019":3.53,"2020":13.33,"2021":29.68,"2022":5.45,"2023":-28.66,"2024":-5.44,"2025":-1.27,"2026":-6.11},"total_trades":19,"last_signal":"BUY"},
-    {"asset":"Euro","total_return":-4.58,"annual":{"2017":11.03,"2018":-3.97,"2019":-3.24,"2020":9.3,"2021":-7.79,"2022":-6.17,"2023":2.63,"2024":-5.54,"2025":13.15,"2026":-1.51},"total_trades":13,"last_signal":"BUY"},
-  ];
-  function initPortfolio(){
-    const grid=document.getElementById("stats-grid");
-    perfData.slice().sort((a,b)=>b.total_return-a.total_return).forEach(p=>{
-      let rows="";
-      Object.keys(p.annual).sort().reverse().forEach(yr=>{
-        const v=p.annual[yr];
-        rows+=`<tr><td>${yr}</td><td class="${v>=0?'pos':'neg'}">${v>=0?'+':''}${v}%</td></tr>`;
-      });
-      const sig=(p.last_signal||'-').toLowerCase();
-      const card=document.createElement("div");card.className="card";
-      card.innerHTML=`
-        <h3><span><span class="ico">${icoMap[p.asset]||''}</span>${p.asset}</span>
-            <span class="total ${p.total_return<0?'neg':''}">${p.total_return>=0?'+':''}${p.total_return}%</span></h3>
-        <div class="meta">
-          <span>Trades <b style="color:#dde3ee">${p.total_trades}</b></span>
-          <span>Son sinyal <span class="sig ${sig}">${p.last_signal}</span></span>
-          <span>Model <b style="color:#9aa6b8">AGG 55 / OI 45</b></span>
-        </div>
-        <table><thead><tr><th>Yıl</th><th>Getiri</th></tr></thead><tbody>${rows}</tbody></table>`;
-      grid.appendChild(card);
-    });
-  }
-  window.onload=function(){
-    initPortfolio();
-    try{ document.getElementById("date").textContent = new Date().toISOString().slice(0,10); }catch(e){}
-  };
+  try{ document.getElementById("date").textContent = new Date().toISOString().slice(0,10); }catch(e){}
 </script>
 </body>
 </html>

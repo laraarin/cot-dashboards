@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>COT Commercial Signals — LARA V6</title>
+<title>CFTC COT — Görsel Analiz</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#070a12; --tx:#e8edf6; --mut:#8b96a8;
-    --oi:#3b82f6; --oc:#a855f7; --grn:#22c55e; --red:#f43f5e;
+    --oi:#3b82f6; --oc:#a855f7;
     --glass:rgba(255,255,255,.045); --glass-bd:rgba(255,255,255,.09);
   }
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -25,115 +25,110 @@
   .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.5px;
     color:var(--mut);text-transform:uppercase;padding:7px 14px;border-radius:999px;
     background:var(--glass);border:1px solid var(--glass-bd);backdrop-filter:blur(12px);margin-bottom:22px;}
-  .dot{width:7px;height:7px;border-radius:50%;background:var(--grn);box-shadow:0 0 0 4px rgba(34,197,94,.18);}
+  .dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.18);}
   h1{font-size:clamp(30px,5vw,46px);font-weight:900;letter-spacing:-1.2px;line-height:1.05;}
   h1 .grad{background:linear-gradient(100deg,#60a5fa,#a855f7 60%,#f0abfc);-webkit-background-clip:text;background-clip:text;color:transparent;}
-  .sub{color:var(--mut);font-size:16px;margin-top:14px;max-width:640px;}
-  .formula{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:18px;font-size:13px;
-    padding:10px 16px;border-radius:12px;background:var(--glass);border:1px solid var(--glass-bd);backdrop-filter:blur(12px);}
-  .formula b{font-family:'JetBrains Mono',monospace;color:var(--tx);}
-  .formula .buy{color:var(--grn);font-weight:700;} .formula .sell{color:var(--red);font-weight:700;}
-  .row{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin:26px 0 6px;}
-  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--mut);}
-  .legend b{font-family:'JetBrains Mono',monospace;}
-  .k-oi{color:#60a5fa;} .k-oc{color:#c084fc;}
+  .sub{color:var(--mut);font-size:16px;margin-top:14px;max-width:680px;}
+  .sub b{color:var(--tx);font-weight:700;}
+
+  /* OI vs OC açıklama */
+  .explain{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:28px 0 6px;}
+  .ex-card{position:relative;overflow:hidden;border-radius:18px;padding:20px 22px;
+    background:var(--glass);border:1px solid var(--glass-bd);backdrop-filter:blur(16px);}
+  .ex-card::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;}
+  .ex-card.oi::before{background:linear-gradient(90deg,#3b82f6,transparent);}
+  .ex-card.oc::before{background:linear-gradient(90deg,#a855f7,transparent);}
+  .ex-h{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;margin-bottom:10px;}
+  .ex-dot{width:9px;height:9px;border-radius:50%;}
+  .ex-dot.oi{background:#60a5fa;box-shadow:0 0 0 4px rgba(59,130,246,.16);}
+  .ex-dot.oc{background:#c084fc;box-shadow:0 0 0 4px rgba(168,85,247,.16);}
+  .ex-card p{color:var(--mut);font-size:13.5px;line-height:1.7;}
+  .ex-card code{font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,.07);padding:1px 6px;border-radius:5px;font-size:11.5px;color:var(--tx);}
+  .ex-card b{color:var(--tx);}
+
+  .row{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:26px 0 4px;}
+  .row .hint{color:var(--mut);font-size:13px;}
   .cta{margin-left:auto;}
   .btn-master{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:14px;
     font-weight:700;font-size:14px;color:#fff;text-decoration:none;
     background:linear-gradient(100deg,#3b82f6,#8b5cf6);border:1px solid rgba(255,255,255,.14);
     box-shadow:0 10px 30px -8px rgba(99,102,241,.6);transition:.25s;}
   .btn-master:hover{transform:translateY(-2px);box-shadow:0 16px 40px -8px rgba(99,102,241,.75);}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;margin-top:24px;}
-  .card{position:relative;overflow:hidden;border-radius:20px;padding:22px;
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(216px,1fr));gap:16px;margin-top:22px;}
+  .card{position:relative;overflow:hidden;border-radius:18px;padding:20px;
     background:var(--glass);border:1px solid var(--glass-bd);backdrop-filter:blur(16px);transition:.25s;}
-  .card::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;
-    background:linear-gradient(90deg,var(--accent,#3b82f6),transparent);}
+  .card::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,#3b82f6,#a855f7);opacity:.7;}
   .card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.18);box-shadow:0 24px 50px -20px rgba(0,0,0,.7);}
-  .card.win-oi{--accent:#3b82f6;} .card.win-oc{--accent:#a855f7;} .card.win-eq{--accent:#64748b;}
-  .c-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
-  .c-name{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;letter-spacing:-.3px;}
+  .c-name{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;letter-spacing:-.3px;margin-bottom:16px;}
   .c-ico{font-size:20px;}
-  .badge{font-size:10px;font-weight:800;letter-spacing:.4px;padding:4px 9px;border-radius:7px;text-transform:uppercase;white-space:nowrap;}
-  .badge.oi{background:rgba(59,130,246,.16);color:#7cb1ff;border:1px solid rgba(59,130,246,.3);}
-  .badge.oc{background:rgba(168,85,247,.16);color:#cf9bff;border:1px solid rgba(168,85,247,.3);}
-  .badge.eq{background:rgba(148,163,184,.14);color:#a9b4c4;border:1px solid rgba(148,163,184,.25);}
-  .metrics{display:flex;gap:10px;}
-  .metric{flex:1;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.05);border-radius:13px;padding:12px 13px;}
-  .metric .lbl{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px;}
-  .metric.oi .lbl{color:#7cb1ff;} .metric.oc .lbl{color:#cf9bff;}
-  .metric .val{font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;}
-  .pos{color:var(--grn);} .neg{color:var(--red);}
-  .links{display:flex;gap:8px;margin-top:16px;}
-  .lnk{flex:1;text-align:center;text-decoration:none;font-size:12px;font-weight:700;padding:9px;border-radius:10px;
+  .links{display:flex;gap:8px;}
+  .lnk{flex:1;text-align:center;text-decoration:none;font-size:13px;font-weight:700;padding:10px;border-radius:11px;
     color:var(--tx);background:rgba(255,255,255,.04);border:1px solid var(--glass-bd);transition:.18s;}
   .lnk.oi:hover{background:rgba(59,130,246,.18);border-color:rgba(59,130,246,.5);color:#cfe0ff;}
   .lnk.oc:hover{background:rgba(168,85,247,.18);border-color:rgba(168,85,247,.5);color:#ecd6ff;}
+
   .foot{margin-top:40px;padding:22px;border-radius:16px;background:var(--glass);border:1px solid var(--glass-bd);
     backdrop-filter:blur(12px);color:var(--mut);font-size:12.5px;line-height:1.85;}
   .foot code{font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,.06);padding:2px 7px;border-radius:5px;font-size:11px;}
   .foot .warn{color:#fbbf24;}
+  .foot b{color:var(--tx);}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="eyebrow"><span class="dot"></span> Walk-forward Ridge · 2017+ backtest · güncel: 25 Haz 2026</div>
-  <h1>COT <span class="grad">Commercial Signals</span></h1>
-  <p class="sub">CFTC ticari pozisyon + Open Interest momentumu ile 11 varlık için haftalık sinyal.</p>
-  <div class="formula">Skor = <b>Inst. Aggression × 0.55</b> + <b>OI Momentum × 0.45</b> &nbsp;·&nbsp; <span class="buy">BUY &gt; 0.10</span> / <span class="sell">SELL &lt; −0.15</span></div>
+  <div class="eyebrow"><span class="dot"></span> CFTC Commitments of Traders · 2017+ · güncel: 25 Haz 2026</div>
+  <h1>CFTC COT <span class="grad">Görsel Analiz</span></h1>
+  <p class="sub">11 emtia/varlık için CFTC <b>ticari (commercial) pozisyonlarını</b> ve <b>Open Interest</b>'i tek ekranda görsel olarak incele. Amaç trade sinyali üretmek değil — <b>makro konjonktürü</b> okumak.</p>
+
+  <div class="explain">
+    <div class="ex-card oi">
+      <div class="ex-h"><span class="ex-dot oi"></span> OI — Futures Only</div>
+      <p>CFTC <code>deacot</code> raporu. Sadece <b>vadeli (futures)</b> kontratlardaki ticari pozisyonlar. Piyasanın saf futures konumlanmasını gösterir.</p>
+    </div>
+    <div class="ex-card oc">
+      <div class="ex-h"><span class="ex-dot oc"></span> OC — Options + Futures</div>
+      <p>CFTC <code>dea_com</code> raporu. Vadeli <b>+ opsiyon</b> hedge pozisyonları birlikte. Opsiyonla yoğun hedge edilen piyasalarda daha tam bir resim verir.</p>
+    </div>
+  </div>
 
   <div class="row">
-    <div class="legend">
-      <span><b class="k-oi">● OI</b> Futures-Only (deacot)</span>
-      <span><b class="k-oc">● OC</b> Options + Futures (dea_com)</span>
-      <span>Getiriler: total return · $100 · long-only</span>
-    </div>
-    <div class="cta"><a class="btn-master" href="master.html">📟 Master Terminal →</a></div>
+    <span class="hint">Bir varlık seç · OI ve OC pozisyon grafiklerini aç · ya da hepsini tek ekranda gez:</span>
+    <div class="cta"><a class="btn-master" href="master.html">📟 Terminali Aç →</a></div>
   </div>
 
   <div class="grid" id="grid"></div>
 
   <div class="foot">
-    <span class="warn">⚠️</span> Geçmiş performans gelecek getiri garantisi değildir. Bu bir araştırma/backtest aracıdır, yatırım tavsiyesi değildir.<br>
-    Her karttaki <b>OI</b> / <b>OC</b> bağlantısı o varlığın interaktif Plotly dashboard'ını açar (kırmızı/yeşil sentiment bantları + skor + OI momentumu).<br>
-    Strateji kaynak kodu ayrı bir özel repoda tutulur · Dashboard'lar <code>laraarin.github.io/cot-dashboards</code> üzerinden yayınlanır.<br>
-    <b>Son veri güncellemesi:</b> 25 Haziran 2026 · CFTC COT raporu: 16 Haziran 2026 · fiyatlar: Yahoo Finance.
+    <span class="warn">⚠️</span> Bu bir araştırma / görsel analiz aracıdır, yatırım tavsiyesi değildir.<br>
+    Her karttaki <b>OI</b> / <b>OC</b> bağlantısı o varlığın interaktif CFTC pozisyon grafiğini açar (ticari net pozisyon + Open Interest + kırmızı/yeşil aşırılık bantları).<br>
+    Veri kaynağı: CFTC COT raporları · fiyatlar Yahoo Finance · işleme ayrı bir özel repoda yapılır · yayın <code>laraarin.github.io/cot-dashboards</code>.<br>
+    <b>Son veri güncellemesi:</b> 25 Haziran 2026 · CFTC COT raporu: 16 Haziran 2026.
   </div>
 </div>
 
 <script>
 const data = [
-  {a:"Bitcoin",   nm:"Bitcoin",   ico:"₿",  oi:859.4, oc:487.1, w:"oi"},
-  {a:"Platinum",  nm:"Platinum",  ico:"💿", oi:224.7, oc:251.8, w:"oc"},
-  {a:"Wheat",     nm:"Wheat",     ico:"🌾", oi:167.1, oc:40.1,  w:"oi"},
-  {a:"Silver",    nm:"Silver",    ico:"🥈", oi:148.3, oc:278.1, w:"oc"},
-  {a:"Gold",      nm:"Gold",      ico:"🥇", oi:117.3, oc:135.3, w:"oc"},
-  {a:"Palladium", nm:"Palladium", ico:"⚪", oi:100.7, oc:90.3,  w:"oi"},
-  {a:"CrudeOil",  nm:"Crude Oil", ico:"🛢️", oi:7.4,   oc:227.6, w:"oc"},
-  {a:"Soybeans",  nm:"Soybeans",  ico:"🫘", oi:-0.3,  oc:-16.2, w:"oi"},
-  {a:"Euro",      nm:"Euro FX",   ico:"🇪🇺", oi:-4.6,  oc:-4.4,  w:"eq"},
-  {a:"Copper",    nm:"Copper",    ico:"🥉", oi:-8.4,  oc:3.4,   w:"oc"},
-  {a:"Corn",      nm:"Corn",      ico:"🌽", oi:-9.4,  oc:-26.5, w:"oi"},
+  {a:"Gold",      nm:"Gold",      ico:"🥇"},
+  {a:"Silver",    nm:"Silver",    ico:"🥈"},
+  {a:"Platinum",  nm:"Platinum",  ico:"💿"},
+  {a:"Palladium", nm:"Palladium", ico:"⚪"},
+  {a:"Copper",    nm:"Copper",    ico:"🥉"},
+  {a:"Bitcoin",   nm:"Bitcoin",   ico:"₿"},
+  {a:"CrudeOil",  nm:"Crude Oil", ico:"🛢️"},
+  {a:"Euro",      nm:"Euro FX",   ico:"🇪🇺"},
+  {a:"Wheat",     nm:"Wheat",     ico:"🌾"},
+  {a:"Corn",      nm:"Corn",      ico:"🌽"},
+  {a:"Soybeans",  nm:"Soybeans",  ico:"🫘"},
 ];
-const fmt = v => (v>=0?"+":"") + v.toFixed(1) + "%";
-const cls = v => v>=0 ? "pos" : "neg";
-const win = {oi:["OI kazandı","oi"], oc:["OC kazandı","oc"], eq:["≈ eşit","eq"]};
-document.getElementById("grid").innerHTML = data.map(d=>{
-  const [wl,wc]=win[d.w];
-  return `<div class="card win-${d.w}">
-    <div class="c-head">
-      <div class="c-name"><span class="c-ico">${d.ico}</span>${d.nm}</div>
-      <span class="badge ${wc}">${wl}</span>
-    </div>
-    <div class="metrics">
-      <div class="metric oi"><div class="lbl">🔵 OI Getiri</div><div class="val ${cls(d.oi)}">${fmt(d.oi)}</div></div>
-      <div class="metric oc"><div class="lbl">🟣 OC Getiri</div><div class="val ${cls(d.oc)}">${fmt(d.oc)}</div></div>
-    </div>
+document.getElementById("grid").innerHTML = data.map(d=>`
+  <div class="card">
+    <div class="c-name"><span class="c-ico">${d.ico}</span>${d.nm}</div>
     <div class="links">
-      <a class="lnk oi" href="OI/${d.a}.html">OI Dashboard →</a>
-      <a class="lnk oc" href="OC/${d.a}.html">OC Dashboard →</a>
+      <a class="lnk oi" href="OI/${d.a}.html">OI →</a>
+      <a class="lnk oc" href="OC/${d.a}.html">OC →</a>
     </div>
-  </div>`;
-}).join("");
+  </div>`).join("");
 </script>
 </body>
 </html>
