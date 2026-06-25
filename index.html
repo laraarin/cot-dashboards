@@ -76,7 +76,7 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="eyebrow"><span class="dot"></span> Walk-forward Ridge · 2017+ backtest</div>
+  <div class="eyebrow"><span class="dot"></span> Walk-forward Ridge · 2017+ backtest · güncel: 25 Haz 2026</div>
   <h1>COT <span class="grad">Commercial Signals</span></h1>
   <p class="sub">CFTC ticari pozisyon + Open Interest momentumu ile 11 varlık için haftalık sinyal.</p>
   <div class="formula">Skor = <b>Inst. Aggression × 0.55</b> + <b>OI Momentum × 0.45</b> &nbsp;·&nbsp; <span class="buy">BUY &gt; 0.10</span> / <span class="sell">SELL &lt; −0.15</span></div>
@@ -95,23 +95,24 @@
   <div class="foot">
     <span class="warn">⚠️</span> Geçmiş performans gelecek getiri garantisi değildir. Bu bir araştırma/backtest aracıdır, yatırım tavsiyesi değildir.<br>
     Her karttaki <b>OI</b> / <b>OC</b> bağlantısı o varlığın interaktif Plotly dashboard'ını açar (kırmızı/yeşil sentiment bantları + skor + OI momentumu).<br>
-    Strateji kaynak kodu ayrı bir özel repoda tutulur · Dashboard'lar <code>laraarin.github.io/cot-dashboards</code> üzerinden yayınlanır.
+    Strateji kaynak kodu ayrı bir özel repoda tutulur · Dashboard'lar <code>laraarin.github.io/cot-dashboards</code> üzerinden yayınlanır.<br>
+    <b>Son veri güncellemesi:</b> 25 Haziran 2026 · CFTC COT raporu: 16 Haziran 2026 · fiyatlar: Yahoo Finance.
   </div>
 </div>
 
 <script>
 const data = [
   {a:"Bitcoin",   nm:"Bitcoin",   ico:"₿",  oi:859.4, oc:487.1, w:"oi"},
-  {a:"Platinum",  nm:"Platinum",  ico:"💿", oi:247.2, oc:251.8, w:"eq"},
-  {a:"Silver",    nm:"Silver",    ico:"🥈", oi:209.5, oc:278.1, w:"oc"},
+  {a:"Platinum",  nm:"Platinum",  ico:"💿", oi:224.7, oc:251.8, w:"oc"},
   {a:"Wheat",     nm:"Wheat",     ico:"🌾", oi:167.1, oc:40.1,  w:"oi"},
-  {a:"Gold",      nm:"Gold",      ico:"🥇", oi:148.8, oc:135.3, w:"eq"},
-  {a:"Palladium", nm:"Palladium", ico:"⚪", oi:122.8, oc:90.3,  w:"oi"},
-  {a:"Soybeans",  nm:"Soybeans",  ico:"🫘", oi:5.2,   oc:-16.2, w:"oi"},
-  {a:"CrudeOil",  nm:"Crude Oil", ico:"🛢️", oi:-0.4,  oc:227.6, w:"oc"},
+  {a:"Silver",    nm:"Silver",    ico:"🥈", oi:148.3, oc:278.1, w:"oc"},
+  {a:"Gold",      nm:"Gold",      ico:"🥇", oi:117.3, oc:135.3, w:"oc"},
+  {a:"Palladium", nm:"Palladium", ico:"⚪", oi:100.7, oc:90.3,  w:"oi"},
+  {a:"CrudeOil",  nm:"Crude Oil", ico:"🛢️", oi:7.4,   oc:227.6, w:"oc"},
+  {a:"Soybeans",  nm:"Soybeans",  ico:"🫘", oi:-0.3,  oc:-16.2, w:"oi"},
+  {a:"Euro",      nm:"Euro FX",   ico:"🇪🇺", oi:-4.6,  oc:-4.4,  w:"eq"},
   {a:"Copper",    nm:"Copper",    ico:"🥉", oi:-8.4,  oc:3.4,   w:"oc"},
-  {a:"Corn",      nm:"Corn",      ico:"🌽", oi:-8.6,  oc:-26.5, w:"oi"},
-  {a:"Euro",      nm:"Euro FX",   ico:"🇪🇺", oi:-4.3,  oc:-4.4,  w:"eq"},
+  {a:"Corn",      nm:"Corn",      ico:"🌽", oi:-9.4,  oc:-26.5, w:"oi"},
 ];
 const fmt = v => (v>=0?"+":"") + v.toFixed(1) + "%";
 const cls = v => v>=0 ? "pos" : "neg";
