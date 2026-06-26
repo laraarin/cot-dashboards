@@ -41,6 +41,7 @@
 
 
 
+
 <!-- POSITIONING_TOGGLE_V1 -->
 <style>
 #pos-toggle{position:fixed;top:14px;left:14px;z-index:1200;display:flex;background:#fff;
@@ -78,8 +79,11 @@
       instY:(gd.data[zi].y||[]).slice()};
   }
   window.setPos=function(which){
+   const hint=document.getElementById('pos-hint');
+   try{
     const gd=document.getElementById('main-plot');
-    if(!gd||!gd.data||!window.Plotly){return;}
+    if(!window.Plotly){if(hint)hint.textContent='Plotly yuklenemedi (ag/CDN engeli?)';return;}
+    if(!gd||!gd.data){if(hint)hint.textContent='Grafik henuz hazir degil — 1 sn sonra tekrar dene';return;}
     if(!ORIG)cap(gd);
     const {si,supi,resi,zi}=ORIG;
     if(which==='spec'){
@@ -98,6 +102,10 @@
     }
     document.getElementById('bt-smart').className='smart'+(which==='comm'?' on':'');
     document.getElementById('bt-spec').className='spec'+(which==='spec'?' on':'');
+    if(hint)hint.textContent=(which==='spec')
+      ?'Spekulator (Lev. Funds) momentum-zone — yesil = kalabalik short/dip'
+      :'Ticari (Smart Money) kontraryan zone — long->destek';
+   }catch(e){if(hint)hint.textContent='Toggle hata: '+(e&&e.message||e);}
   };
 })();
 </script>
