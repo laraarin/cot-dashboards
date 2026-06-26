@@ -129,7 +129,7 @@
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
 <div id="content">
-  <div class="frame-wrap"><iframe id="frame" src="OI/Gold.html"></iframe></div>
+  <div class="frame-wrap"><iframe id="frame" src="OI/Gold.html?v=20260626"></iframe></div>
 </div>
 
 <script>
@@ -151,6 +151,8 @@
     {name:"EUR — Granger Nedensellik",file:"Fundamentals/Euro_Granger.html",ico:"🔬"},
   ];
   let mode="OI", curFile="Gold.html";
+  const VER="20260626";                  // dashboard surumu — guncelleyince artir (cache kirma)
+  const withV = p => p + (p.indexOf("?")>=0?"&":"?") + "v=" + VER;
 
   document.getElementById("nav").innerHTML = assets.map((a,i)=>
     `<div class="nav-item${i===0?' active':''}" onclick="loadAsset(${i},this)">
@@ -162,7 +164,7 @@
 
   function loadAsset(i,el){
     const a=assets[i]; curFile=a.file;
-    document.getElementById("frame").src = mode+"/"+a.file;
+    document.getElementById("frame").src = withV(mode+"/"+a.file);
     document.getElementById("cur-name").textContent=a.name;
     document.getElementById("cur-ico").textContent=a.ico;
     setActive(el);
@@ -170,7 +172,7 @@
   }
   function loadFixed(i,el){
     const m=macro[i];
-    document.getElementById("frame").src = m.file;
+    document.getElementById("frame").src = withV(m.file);
     document.getElementById("cur-name").textContent=m.name;
     document.getElementById("cur-ico").textContent=m.ico;
     setActive(el);
@@ -180,7 +182,7 @@
     mode=m;
     document.getElementById("t-oi").className = (m==="OI"?"on oi":"");
     document.getElementById("t-oc").className = (m==="OC"?"on oc":"");
-    document.getElementById("frame").src = mode+"/"+curFile;
+    document.getElementById("frame").src = withV(mode+"/"+curFile);
   }
 
   // --- Pozisyon grubu (Smart Money / Spekulator) — iframe'deki setPos'u cagirir ---
