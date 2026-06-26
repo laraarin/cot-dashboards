@@ -52,6 +52,9 @@
     padding:6px 15px;border-radius:8px;cursor:pointer;transition:.2s;letter-spacing:.5px;}
   .toggle button.on.oi{color:var(--accent-2);background:color-mix(in srgb,var(--accent-2) 16%,transparent);}
   .toggle button.on.oc{color:var(--accent);background:color-mix(in srgb,var(--accent) 16%,transparent);}
+  .toggle button.on.smart{color:#fff;background:var(--good);}
+  .toggle button.on.spec{color:#fff;background:var(--bad);}
+  .toggle.pos{margin-left:8px;}
   .spacer{margin-left:auto;}
   .iconbtn{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;
     cursor:pointer;font-size:16px;line-height:1;background:var(--surface-2);border:1px solid var(--line);color:var(--text);transition:.18s;}
@@ -103,6 +106,10 @@
   <div class="toggle">
     <button class="on oi" id="t-oi" onclick="setMode('OI')">OI</button>
     <button id="t-oc" onclick="setMode('OC')">OC</button>
+  </div>
+  <div class="toggle pos" id="pos-grp" title="Pozisyon grubu — Smart Money (ticari) / Spekülatör (Managed Money / Lev. Funds)">
+    <button class="on smart" id="p-smart" onclick="setPosMode('comm')">🏦 Smart</button>
+    <button class="spec" id="p-spec" onclick="setPosMode('spec')">🎲 Spek</button>
   </div>
   <div class="spacer"></div>
   <button class="iconbtn" id="themeBtn" title="Açık / koyu tema">🌙</button>
@@ -174,7 +181,28 @@
     document.getElementById("t-oi").className = (m==="OI"?"on oi":"");
     document.getElementById("t-oc").className = (m==="OC"?"on oc":"");
     document.getElementById("frame").src = mode+"/"+curFile;
+    document.getElementById("pos-grp").style.opacity = (m==="OC"?"0.4":"1");
   }
+
+  // --- Pozisyon grubu (Smart Money / Spekulator) — iframe'deki setPos'u cagirir ---
+  let posMode="comm";
+  function applyPos(tries){
+    tries = tries||0;
+    const f=document.getElementById("frame");
+    try{
+      const w=f&&f.contentWindow;
+      if(w && typeof w.setPos==="function"){
+        if(!w.setPos(posMode) && tries<12) setTimeout(()=>applyPos(tries+1),200);
+      } else if(tries<12){ setTimeout(()=>applyPos(tries+1),200); }
+    }catch(e){ if(tries<12) setTimeout(()=>applyPos(tries+1),200); }
+  }
+  function setPosMode(m){
+    posMode=m;
+    document.getElementById("p-smart").className=(m==="comm"?"on smart":"smart");
+    document.getElementById("p-spec").className=(m==="spec"?"on spec":"spec");
+    applyPos();
+  }
+  document.getElementById("frame").addEventListener("load", ()=>applyPos());
   function setActive(el){
     document.querySelectorAll(".nav-item").forEach(i=>i.classList.remove("active"));
     el.classList.add("active");
