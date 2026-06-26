@@ -43,6 +43,7 @@
 
 
 
+
 <!-- POSITIONING_TOGGLE_V1 -->
 <style>
 #pos-toggle{position:fixed;top:14px;left:14px;z-index:1200;display:flex;background:#fff;
@@ -67,14 +68,17 @@
     return (Math.abs(T[lo]-t)<Math.abs(T[lo-1]-t))?lo:lo-1;}
   function mp(xs,src){return xs.map(d=>src[nidx(ms(d))]);}
   let ORIG=null;
+  // Plotly verisi binary (bdata/dtype) olabilir -> cozulmus diziler _fullData'da
+  function plain(v){return (v==null)?[]:Array.prototype.slice.call(v);}
   function cap(gd){
+    const fd=gd._fullData||gd.data;
     const f=n=>gd.data.findIndex(t=>t.name===n);
     const si=f('Sentiment'),supi=f('Support'),resi=f('Resistance'),zi=f('Inst. Z-Score');
     ORIG={si,supi,resi,zi,
-      base:(gd.data[si].base||[]).slice(), y:(gd.data[si].y||[]).slice(),
-      color:(gd.data[si].marker&&gd.data[si].marker.color||[]).slice(),
-      supY:(supi>=0?gd.data[supi].y:[]).slice(), resY:(resi>=0?gd.data[resi].y:[]).slice(),
-      instY:(zi>=0?gd.data[zi].y:[]).slice()};
+      base:plain(fd[si].base), y:plain(fd[si].y),
+      color:plain(fd[si].marker&&fd[si].marker.color),
+      supY:supi>=0?plain(fd[supi].y):[], resY:resi>=0?plain(fd[resi].y):[],
+      instY:zi>=0?plain(fd[zi].y):[]};
   }
   window.setPos=function(which){
    try{
