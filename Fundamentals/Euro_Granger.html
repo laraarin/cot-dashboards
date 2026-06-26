@@ -1,0 +1,99 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EUR/USD — Granger Nedensellik</title>
+<link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>
+<style>
+ :root{--bg:#fbfaf7;--surf:#fff;--line:#ece7da;--text:#2c2a25;--muted:#8a8576;
+   --accent:#E9A53C;--good:#2e9e6b;--good-bg:#e9f7ef;--good-hi:#cdeedd;}
+ *{box-sizing:border-box;margin:0;padding:0;}
+ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);padding:26px 22px 40px;line-height:1.5;}
+ .wrap{max-width:1080px;margin:0 auto;}
+ h1{font-size:23px;font-weight:800;letter-spacing:-.3px;}
+ h1 .g{color:var(--accent);}
+ .lead{color:var(--muted);font-size:13.5px;margin-top:8px;max-width:760px;}
+ .lead b{color:var(--text);}
+ .note{margin:16px 0 22px;padding:11px 14px;border-left:3px solid var(--accent);background:#fdf7ec;
+   border-radius:0 9px 9px 0;font-size:12.5px;color:#6b5f44;}
+ .hero{display:flex;align-items:center;gap:16px;background:var(--good-bg);border:1px solid var(--good-hi);
+   border-radius:14px;padding:16px 20px;margin-bottom:22px;}
+ .hero .arrow{font-size:26px;}
+ .hero .txt{font-size:15px;font-weight:700;color:#1d6e4b;}
+ .hero .sub{font-size:12px;color:#4a8a6c;font-weight:500;}
+ .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+ @media(max-width:760px){.grid{grid-template-columns:1fr;}}
+ .card{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:16px 18px;}
+ .card-h{font-weight:800;font-size:15px;margin-bottom:4px;}
+ .muted{color:var(--muted);font-weight:500;font-size:11.5px;}
+ .best{font-size:12px;color:#555;margin:6px 0 12px;}
+ table.pv{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:11px;}
+ table.pv th,table.pv td{padding:5px 4px;text-align:center;border-bottom:1px solid #f1ede2;}
+ table.pv th{color:var(--muted);font-weight:600;font-size:10px;}
+ td.dir,th.dir{text-align:left;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;white-space:nowrap;color:#444;}
+ td.sig{background:var(--good-bg);color:var(--good);font-weight:600;}
+ td.sig.hi{background:var(--good-hi);color:#1d6e4b;font-weight:700;}
+ .verdict{margin-top:12px;padding:9px 12px;border-radius:9px;font-size:12.5px;font-weight:700;}
+ .verdict.ok{background:var(--good-bg);color:#1d6e4b;}
+ .verdict.mix{background:#fdf3e6;color:#9a6a18;}
+ .adf{margin-top:9px;font-size:10.5px;color:var(--muted);line-height:1.5;}
+ .foot{margin-top:22px;font-size:11px;color:var(--muted);line-height:1.7;}
+ .legend{display:flex;gap:14px;font-size:11px;color:var(--muted);margin:6px 0 0;align-items:center;}
+ .sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:4px;}
+</style></head>
+<body><div class="wrap">
+  <h1>EUR/USD — <span class="g">Granger Nedensellik</span></h1>
+  <p class="lead">Soru: <b>Faiz farkı mı (Alman−ABD 2Y spread) EUR/USD'yi sürüklüyor</b>, yoksa tersi mi?
+     Çift yönlü Granger testi, hem günlük hem haftalık.</p>
+  <div class="note">⚙️ <b>Metod:</b> Test ham seviye veriye değil <b>getiri/fark</b> serilerine uygulandı
+     (EUR/USD log getirisi · spread birinci farkı). Granger durağanlık ister; ADF testi seviye spread'in
+     durağan olmadığını, farkının durağan olduğunu doğruluyor (aşağıda).</div>
+
+  <div class="hero">
+    <span class="arrow">📈→💱</span>
+    <div><div class="txt">Faiz farkı → EUR/USD &nbsp;(tek yön, en iyi lag = 1)</div>
+    <div class="sub">Ters yön (EUR/USD → faiz) hiçbir frekansta anlamlı değil. Spread öncü, EUR/USD takipçi.</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-h">📅 Daily <span class="muted">n=2991 · maxlag=10</span></div>
+      <div class="best">En iyi lag → <b>AIC 9</b> · <b>BIC 2</b></div>
+      <table class="pv">
+        <thead><tr><th class="dir">Yön \ Lag</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr></thead>
+        <tbody>
+          <tr><td class="dir">Faiz farkı → EUR/USD</td><td class="sig hi">0.000</td><td class="sig hi">0.000</td><td class="sig hi">0.000</td><td class="sig hi">0.000</td><td class="sig hi">0.000</td><td class="sig hi">0.000</td><td class="sig hi">0.000</td><td class="sig hi">0.000</td><td class="sig hi">0.000</td><td class="sig hi">0.000</td></tr>
+          <tr><td class="dir">EUR/USD → Faiz farkı</td><td>0.564</td><td>0.127</td><td>0.054</td><td>0.056</td><td>0.156</td><td>0.184</td><td>0.144</td><td>0.117</td><td>0.206</td><td>0.226</td></tr>
+        </tbody>
+      </table>
+      <div class="verdict ok">
+        Faiz farkı → EUR/USD (tek yön, lag 1, p=0.0)
+      </div>
+      <div class="adf">ADF p — Spread seviye 0.2205 (durağan değil) → fark 0.0 ✓ ·
+        FX getiri 0.0 ✓</div>
+    </div>
+    <div class="card">
+      <div class="card-h">🗓️ Weekly <span class="muted">n=599 · maxlag=8</span></div>
+      <div class="best">En iyi lag → <b>AIC 1</b> · <b>BIC 0</b></div>
+      <table class="pv">
+        <thead><tr><th class="dir">Yön \ Lag</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr></thead>
+        <tbody>
+          <tr><td class="dir">Faiz farkı → EUR/USD</td><td class="sig hi">0.000</td><td class="sig hi">0.000</td><td class="sig hi">0.001</td><td class="sig hi">0.001</td><td class="sig hi">0.003</td><td class="sig hi">0.007</td><td class="sig">0.012</td><td class="sig">0.021</td></tr>
+          <tr><td class="dir">EUR/USD → Faiz farkı</td><td>0.760</td><td>0.315</td><td>0.306</td><td>0.270</td><td>0.447</td><td>0.395</td><td>0.377</td><td>0.278</td></tr>
+        </tbody>
+      </table>
+      <div class="verdict ok">
+        Faiz farkı → EUR/USD (tek yön, lag 1, p=0.0001)
+      </div>
+      <div class="adf">ADF p — Spread seviye 0.24 (durağan değil) → fark 0.0 ✓ ·
+        FX getiri 0.0 ✓</div>
+    </div></div>
+
+  <div class="legend"><span><span class="sw" style="background:var(--good-bg);border:1px solid var(--good-hi)"></span>p&lt;0.05</span>
+    <span><span class="sw" style="background:var(--good-hi)"></span>p&lt;0.01</span>
+    <span>Hücreler ssr F-test p-değeri</span></div>
+
+  <div class="foot">
+    Spread tanımı: <b>DE2Y - US2Y</b> · Başlangıç 2015-01-01 ·
+    Kaynak: FRED DGS2 · ECB AAA 2Y · Yahoo EURUSD=X.<br>
+    Granger nedenselliği istatistiksel öncülüktür, mekanik kanıt değildir. Araştırma amaçlıdır, yatırım tavsiyesi değildir.
+  </div>
+</div></body></html>
