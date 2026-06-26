@@ -114,7 +114,9 @@
 <div id="sidebar">
   <div class="sb-label">Varlıklar</div>
   <div id="nav"></div>
-  <div class="sb-note"><b class="oi">OI</b> = Futures Only · <b class="oc">OC</b> = Options + Futures. Üstteki anahtarla geçiş yap.</div>
+  <div class="sb-label" style="margin-top:12px;">Makro / Temel Veri</div>
+  <div id="nav-macro"></div>
+  <div class="sb-note"><b class="oi">OI</b> = Futures Only · <b class="oc">OC</b> = Options + Futures. Üstteki anahtarla geçiş yap. <b>Makro</b> panelleri OI/OC'den bağımsızdır.</div>
 </div>
 
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
@@ -137,17 +139,32 @@
     {name:"Corn",file:"Corn.html",ico:"🌽"},
     {name:"Soybeans",file:"Soybeans.html",ico:"🫘"},
   ];
+  const macro=[
+    {name:"EUR — Faiz Farkı (2Y)",file:"Fundamentals/Euro_RateSpread.html",ico:"📈"},
+  ];
   let mode="OI", curFile="Gold.html";
 
   document.getElementById("nav").innerHTML = assets.map((a,i)=>
     `<div class="nav-item${i===0?' active':''}" onclick="loadAsset(${i},this)">
        <span class="ico">${a.ico}</span>${a.name}</div>`).join("");
 
+  document.getElementById("nav-macro").innerHTML = macro.map((m,i)=>
+    `<div class="nav-item" onclick="loadFixed(${i},this)">
+       <span class="ico">${m.ico}</span>${m.name}</div>`).join("");
+
   function loadAsset(i,el){
     const a=assets[i]; curFile=a.file;
     document.getElementById("frame").src = mode+"/"+a.file;
     document.getElementById("cur-name").textContent=a.name;
     document.getElementById("cur-ico").textContent=a.ico;
+    setActive(el);
+    if(window.innerWidth<=880) closeMenu();
+  }
+  function loadFixed(i,el){
+    const m=macro[i];
+    document.getElementById("frame").src = m.file;
+    document.getElementById("cur-name").textContent=m.name;
+    document.getElementById("cur-ico").textContent=m.ico;
     setActive(el);
     if(window.innerWidth<=880) closeMenu();
   }
