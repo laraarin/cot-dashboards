@@ -44,6 +44,7 @@
 
 
 
+
 <!-- POSITIONING_TOGGLE_V1 -->
 <style>
 #pos-toggle{position:fixed;top:14px;left:14px;z-index:1200;display:flex;background:#fff;
@@ -89,7 +90,7 @@
     if(which==='spec'){
       const bx=gd.data[si].x;
       const sb=mp(bx,SPEC.buy), ss=mp(bx,SPEC.sell);
-      const h=sb.map((b,i)=>ss[i]-b), col=mp(bx,SPEC.z).map(v=>-v);
+      const h=sb.map((b,i)=>ss[i]-b), col=mp(bx,SPEC.z);  // ham net z: + yesil / - kirmizi
       if(si>=0)Plotly.restyle(gd,{'base':[sb],'y':[h],'marker.color':[col]},[si]);
       if(supi>=0)Plotly.restyle(gd,{'y':[mp(gd.data[supi].x,SPEC.buy)]},[supi]);
       if(resi>=0)Plotly.restyle(gd,{'y':[mp(gd.data[resi].x,SPEC.sell)]},[resi]);
