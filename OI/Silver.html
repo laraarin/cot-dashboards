@@ -85,4 +85,24 @@
 })();
 </script>
 
+
+<!-- COST_BANDS_V1 -->
+<script>
+(function(){
+  const C={"unit": "$/oz", "lines": [{"name": "C1 ~$12.0/oz", "val": 12.0, "color": "#2e9e6b"}, {"name": "AISC/90p ~$20.0/oz", "val": 20.0, "color": "#E9A53C"}, {"name": "Incentive ~$26.0/oz", "val": 26.0, "color": "#d2654e"}]};
+  function go(){
+    const gd=document.getElementById('main-plot');
+    if(!gd||!gd.data||!window.Plotly){return setTimeout(go,200);}
+    const ct=gd.data.find(t=>t.type==='candlestick')||gd.data.find(t=>t.x&&t.x.length);
+    if(!ct||!ct.x||!ct.x.length){return setTimeout(go,200);}
+    const x0=ct.x[0], x1=ct.x[ct.x.length-1];
+    const tr=C.lines.map(L=>({x:[x0,x1],y:[L.val,L.val],type:'scatter',mode:'lines',
+      xaxis:'x',yaxis:'y',name:L.name,line:{color:L.color,width:1.3,dash:'dot'},
+      legendgroup:'cost',hovertemplate:L.name+'<extra></extra>'}));
+    Plotly.addTraces(gd,tr);
+  }
+  if(document.readyState!=='loading')go();else document.addEventListener('DOMContentLoaded',go);
+})();
+</script>
+
 </body></html>
