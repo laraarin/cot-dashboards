@@ -17,6 +17,7 @@
     
 
 
+
 <!-- SPREAD_INJECT_V1: US-DE 2Y spread overlay on price chart -->
 <script>
 (function(){
@@ -25,13 +26,13 @@
   function go(){
     const gd=document.getElementById('main-plot');
     if(!gd || !gd.data || !window.Plotly){ return setTimeout(go,150); }
-    Plotly.relayout(gd, {yaxis5:{overlaying:'y',side:'right',anchor:'x',
-        title:{text:'Alman-ABD 2Y Spread (pp)',font:{color:'#E9A53C'}},
-        showgrid:false,zeroline:false,tickfont:{color:'#E9A53C'}}}).then(function(){
-      Plotly.addTraces(gd, {x:SPX,y:SPY,type:'scatter',mode:'lines',
+    Plotly.addTraces(gd, {x:SPX,y:SPY,type:'scatter',mode:'lines',
         name:'Alman-ABD 2Y Spread (pp)',line:{color:'#E9A53C',width:1.7},
         xaxis:'x',yaxis:'y5',
-        hovertemplate:'Spread %{y:.2f} pp<extra></extra>'});
+        hovertemplate:'Spread %{y:.2f} pp<extra></extra>'}).then(function(){
+      Plotly.relayout(gd, {'yaxis5.overlaying':'y','yaxis5.side':'right','yaxis5.anchor':'x',
+        'yaxis5.title':{text:'Alman-ABD 2Y Spread (pp)',font:{color:'#E9A53C'}},
+        'yaxis5.showgrid':false,'yaxis5.zeroline':false,'yaxis5.tickfont':{color:'#E9A53C'}});
     });
   }
   if(document.readyState!=='loading') go(); else document.addEventListener('DOMContentLoaded',go);
