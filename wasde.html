@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>USDA WASDE — Terminal</title>
+<title>USDA WASDE â€” Terminal</title>
 <script>(function(){try{var t=localStorage.getItem("sm-theme");if(t==="light")document.documentElement.dataset.theme="light";}catch(e){}})();</script>
 <style>
   :root{
@@ -62,31 +62,31 @@
 <header>
   <div class="ham" id="ham" onclick="toggleMenu()"><div></div><div></div><div></div></div>
   <div class="logo">USDA<span> WASDE</span></div>
-  <div class="now"><span class="ico" id="cur-ico">🌽</span><span id="cur-name">Corn</span></div>
+  <div class="now"><span class="ico" id="cur-ico">ğŸŒ½</span><span id="cur-name">Corn</span></div>
   <div class="spacer"></div>
-  <a class="lnk cot" href="master.html">📟 COT Terminali →</a>
-  <button class="iconbtn" id="themeBtn" title="Tema">🌙</button>
-  <a class="lnk" href="index.html">← Ana ekran</a>
+  <a class="lnk cot" href="master.html">ğŸ“Ÿ COT Terminali â†’</a>
+  <button class="iconbtn" id="themeBtn" title="Tema">ğŸŒ™</button>
+  <a class="lnk" href="index.html">â† Ana ekran</a>
   <div class="status"><span class="live"></span> USDA PSD</div>
 </header>
 
 <div id="sidebar">
-  <div class="sb-label">Tahıl / Yağlı Tohum</div>
+  <div class="sb-label">TahÄ±l / YaÄŸlÄ± Tohum</div>
   <div id="nav"></div>
-  <a class="cot-btn" href="master.html">📟 COT Konumlanma Terminali</a>
-  <div class="sb-note"><b>WASDE</b> = World Agricultural Supply &amp; Demand Estimates. <b>STU</b> (Stocks-to-Use) düşükse arz sıkışık = boğasal. COT terminaliyle: fundamental (WASDE) + konumlanma (COT) birlikte okunur.</div>
+  <a class="cot-btn" href="master.html">ğŸ“Ÿ COT Konumlanma Terminali</a>
+  <div class="sb-note"><b>WASDE</b> = World Agricultural Supply &amp; Demand Estimates. <b>STU</b> (Stocks-to-Use) dÃ¼ÅŸÃ¼kse arz sÄ±kÄ±ÅŸÄ±k = boÄŸasal. COT terminaliyle: fundamental (WASDE) + konumlanma (COT) birlikte okunur.</div>
 </div>
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-<div id="content"><div class="frame-wrap"><iframe id="frame" src="Fundamentals/WASDE/Corn.html?v=20260626b"></iframe></div></div>
+<div id="content"><div class="frame-wrap"><iframe id="frame" src="Fundamentals/WASDE/Corn.html?v=20260626c"></iframe></div></div>
 
 <script>
   const items=[
-    {name:"Corn",file:"Corn.html",ico:"🌽"},
-    {name:"Wheat",file:"Wheat.html",ico:"🌾"},
-    {name:"Soybeans",file:"Soybeans.html",ico:"🫘"},
+    {name:"Corn",file:"Corn.html",ico:"ğŸŒ½"},
+    {name:"Wheat",file:"Wheat.html",ico:"ğŸŒ¾"},
+    {name:"Soybeans",file:"Soybeans.html",ico:"ğŸ«˜"},
   ];
-  const VER="20260626b";
+  const VER="20260626c";
   const withV = p => p + (p.indexOf("?")>=0?"&":"?") + "v=" + VER;
   document.getElementById("nav").innerHTML = items.map((a,i)=>
     `<div class="nav-item${i===0?' active':''}" onclick="load(${i},this)"><span class="ico">${a.ico}</span>${a.name}</div>`).join("");
@@ -101,7 +101,7 @@
   }
   function toggleMenu(){document.getElementById("sidebar").classList.toggle("open");document.getElementById("overlay").classList.toggle("open");}
   function ct(){return document.documentElement.dataset.theme==="light"?"light":"dark";}
-  function syncBtn(){const b=document.getElementById("themeBtn");if(b)b.textContent=ct()==="light"?"☀":"🌙";}
+  function syncBtn(){const b=document.getElementById("themeBtn");if(b)b.textContent=ct()==="light"?"â˜€":"ğŸŒ™";}
   document.getElementById("themeBtn").onclick=function(){
     const t=ct()==="light"?"dark":"light";
     if(t==="light")document.documentElement.dataset.theme="light";else document.documentElement.removeAttribute("data-theme");
@@ -111,3 +111,4 @@
 </script>
 </body>
 </html>
+
